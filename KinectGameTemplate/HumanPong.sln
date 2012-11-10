@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyKinectGame", "KinectGameTemplate\KinectGameTemplate\MyKinectGame.csproj", "{6EAE6C78-08C2-4957-861F-FEF66A6C5D28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyKinectGameContent", "KinectGameTemplate\KinectGameTemplateContent\MyKinectGameContent.contentproj", "{87EAF4BD-96FF-4F2D-8EDD-10F6C542F20F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6EAE6C78-08C2-4957-861F-FEF66A6C5D28}.Debug|x86.ActiveCfg = Debug|x86
+		{6EAE6C78-08C2-4957-861F-FEF66A6C5D28}.Debug|x86.Build.0 = Debug|x86
+		{6EAE6C78-08C2-4957-861F-FEF66A6C5D28}.Release|x86.ActiveCfg = Release|x86
+		{6EAE6C78-08C2-4957-861F-FEF66A6C5D28}.Release|x86.Build.0 = Release|x86
+		{87EAF4BD-96FF-4F2D-8EDD-10F6C542F20F}.Debug|x86.ActiveCfg = Debug|x86
+		{87EAF4BD-96FF-4F2D-8EDD-10F6C542F20F}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

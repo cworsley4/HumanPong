@@ -1,0 +1,402 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>KinectGame</name>
+    </assembly>
+    <members>
+        <member name="T:KinectExplorer.KinectGameHost">
+            <summary>
+            Runs a KinectGame, simulating an environment in which
+            it would be run with other games.
+            
+            To test a game, only the following methods should be overridden:
+            GetKinectGame(),
+            GetResolution()
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.KinectGameHost.#ctor">
+            <summary>
+            Creates the KinectGameHost.
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.KinectGameHost.GetKinnectGame">
+            <summary>
+            Should return the type of your KinectGame.
+            For instance, if you have a game named MyKinectGame, this should
+            return typeof(MyKinectGame).
+            </summary>
+            <returns>The type of the KinectGame this is hosting</returns>
+        </member>
+        <member name="M:KinectExplorer.KinectGameHost.GetResolution">
+            <summary>
+            Should return the resolution the game will be tested at.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:KinectExplorer.GameConfig">
+            <summary>
+            A configuration class that gives information on a KinectGame
+            </summary>
+        </member>
+        <member name="F:KinectExplorer.GameConfig.Name">
+            <summary>
+            The name of this KinectGame
+            </summary>
+        </member>
+        <member name="F:KinectExplorer.GameConfig.Author">
+            <summary>
+            The author of this KinectGame
+            </summary>
+        </member>
+        <member name="F:KinectExplorer.GameConfig.Description">
+            <summary>
+            The description of this KinectGame
+            </summary>
+        </member>
+        <member name="F:KinectExplorer.GameConfig.IsPassive">
+            <summary>
+            Indicates whether this game is "passive," and can run without a user,
+            meaning it can be used like a screensaver
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.GameConfig.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Creates a GameConfig to describe a KinectGame
+            </summary>
+            <param name="name">The game's name</param>
+            <param name="author">The author(s) name(s)</param>
+            <param name="description">A brief description of the game</param>
+        </member>
+        <member name="T:KinectExplorer.KinectManager">
+            <summary>
+            A singleton class controlling the Kinect.
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.KinectManager.Start">
+            <summary>
+            Starts the Kinect. This should not be called from inside a KinectGame
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.KinectManager.GetJointPosOnScreen(Microsoft.Kinect.Joint,KinectExplorer.Size)">
+            <summary>
+            Gets the position of a Skeleton's Joint on the screen.
+            </summary>
+            <param name="joint">The joint</param>
+            <param name="screenSize">The size of the screen.</param>
+            <returns>The position on the screen of the Joint</returns>
+        </member>
+        <member name="M:KinectExplorer.KinectManager.GetSkeletonPointPosOnScreen(Microsoft.Kinect.SkeletonPoint,KinectExplorer.Size)">
+            <summary>
+            Gets the position of a SkeletonPoint on the screen.
+            </summary>
+            <param name="point">The point</param>
+            <param name="screenSize">The size of the screen.</param>
+            <returns>The position on the screen of the point</returns>
+        </member>
+        <member name="M:KinectExplorer.KinectManager.GetScreen(Microsoft.Xna.Framework.GraphicsDeviceManager)">
+            <summary>
+            Returns a Texture2D of the current video frame from the Kinect
+            </summary>
+            <param name="graphics">The GraphicsDeviceManager to use to create the Texture2D</param>
+            <returns></returns>
+        </member>
+        <member name="M:KinectExplorer.KinectManager.Stop">
+            <summary>
+            Stops the Kinect. This should not be called from a KinectGame.
+            </summary>
+        </member>
+        <member name="P:KinectExplorer.KinectManager.SkeletonA">
+            <summary>
+            Gets the first Skeleton the Kinect is tracking.
+            </summary>
+        </member>
+        <member name="P:KinectExplorer.KinectManager.SkeletonB">
+            <summary>
+            Gets the second Sekelton the Kinect is tracking.
+            </summary>
+        </member>
+        <member name="P:KinectExplorer.KinectManager.Kinect">
+            <summary>
+            Gets the KinectSensor class with the underlying functionality of the Kinect.
+            </summary>
+        </member>
+        <member name="T:KinectExplorer.ContentLoader">
+            <summary>
+            A wrapper class for a ContentManager. The methods work the same way,
+            but this allows load paths to be modfied for each running KinectGame,
+            allowing them to have separate content folders.
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.ContentLoader.#ctor(Microsoft.Xna.Framework.Content.ContentManager,System.String)">
+            <summary>
+            Creates a ContentLoader. KinectGames should not use this constructor.
+            </summary>
+            <param name="content">The ContentManager to wrap</param>
+            <param name="contentRoot">The content root for this game - should be "" by default.</param>
+        </member>
+        <member name="M:KinectExplorer.ContentLoader.Load``1(System.String)">
+            <summary>
+            Loads content to be used in a KinectGame
+            </summary>
+            <typeparam name="T">The type of content to load, such as Texture2D</typeparam>
+            <param name="path">The path to the resource in your main content directory - do not add a file extension</param>
+            <returns>The loaded resource</returns>
+        </member>
+        <member name="P:KinectExplorer.ContentLoader.ContentManager">
+            <summary>
+            Gets the ContentManager that this is wrapping. Directly accessing this is not recommended for
+            games that will be exported becasue it bypasses safe content loading.
+            </summary>
+        </member>
+        <member name="T:KinectExplorer.KinectGame">
+            <summary>
+            A game class with convenience methods for running with a Kinect.
+            </summary>
+        </member>
+        <member name="F:KinectExplorer.KinectGame.graphics">
+            <summary>
+            The GraphicsDeviceManager, as would be found in a Game class
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.GetConfig">
+            <summary>
+            Should return a GameConfig describing this game
+            </summary>
+            <returns>The config</returns>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.Initialize">
+            <summary>
+            Should handle all initialization logic for this game
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.LoadContent(KinectExplorer.ContentLoader)">
+            <summary>
+            Should load all content for this game
+            </summary>
+            <param name="content">A ContentLoader to load content</param>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.UnloadContent">
+            <summary>
+            Should unload all content for this game.
+            It is VERY IMPORTANT that you unload all content here
+            as other games may need to run after it.
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.Update(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Should hande the update logic for this game.
+            </summary>
+            <param name="gameTime">The time elapsed since the last update</param>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.Draw(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Should handle the draw logic for this game.
+            NOTE: You should only handle DRAW logic here. In threory, if this method
+            is called twice without Update() being called, the screen should not change.
+            </summary>
+            <param name="gameTime">The time elapsed since the last draw</param>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.#ctor(KinectExplorer.GameParameters)">
+            <summary>
+            Creates a KinectGame. This constructor should not
+            be overridden.
+            </summary>
+            <param name="gParams">The GameParameters describing the environment in which the game is running.</param>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.Create(System.Type,KinectExplorer.GameParameters)">
+            <summary>
+            A factory method for creating an instance of a KinectGame
+            from its type. For this method to work, a game must NOT
+            modify the constructor.
+            </summary>
+            <param name="t"></param>
+            <param name="gParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.Exit">
+            <summary>
+            When called, indicates that this game has finished and should exit.
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.LoadContent(Microsoft.Xna.Framework.Content.ContentManager,System.String)">
+            <summary>
+            Handles content loading for this game. To load custom content,
+            override the LoadContent(ContentLoader) method instead.
+            Games should not call this method.
+            </summary>
+            <param name="content">The ContentManager to use</param>
+            <param name="contentRoot">The root directory for this game's content</param>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.OnKinectSkeletonFrameReady(System.Object,Microsoft.Kinect.SkeletonFrameReadyEventArgs)">
+            <summary>
+            Override this method to intercept Kinect SkeletonFrameReady events.
+            </summary>
+            <param name="sender">The sender of this event</param>
+            <param name="e">The parameters for this event</param>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.OnKinectVideoFrameReady(System.Object,Microsoft.Kinect.ColorImageFrameReadyEventArgs)">
+            <summary>
+            Override this method to intercept Kinect ColorFrameReady events.
+            </summary>
+            <param name="sender">The sender of this event</param>
+            <param name="e">The parameters for this event</param>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.OnKinectDepthFrameReady(System.Object,Microsoft.Kinect.DepthImageFrameReadyEventArgs)">
+            <summary>
+            Override this method to intercept Kinect DepthFrameReady events.
+            </summary>
+            <param name="sender">The sender of this event</param>
+            <param name="e">The parameters for this event</param>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.GetJointPosOnScreen(Microsoft.Kinect.Joint)">
+            <summary>
+            A helper method to get the position of a Skeleton's join on the screen.
+            This assumes the screen is projecting the Kinect's videosteam at full resolution.
+            </summary>
+            <param name="joint"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.DebugSkeletons">
+            <summary>
+            Draws SkeletonA and SkeletonB on the screen.
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.DebugSkeletons(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Draws SkeletonA and SkeletonB on the screen using the given Spritebatch.
+            </summary>
+            <param name="spriteBatch"></param>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.DrawSkeleton(Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Kinect.Skeleton,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Draws the given Skeleton on the screen using the given SpriteBatch and Color.
+            </summary>
+            <param name="spriteBatch"></param>
+            <param name="skeleton"></param>
+            <param name="color"></param>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.DrawCamera">
+            <summary>
+            Draws the camera to the full screen.
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.DrawCamera(Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Draws the camera to the given Rectangle of the screen.
+            </summary>
+            <param name="rect"></param>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.DrawCamera(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Draws the Camera with the given Spritebatch to the full screen.
+            </summary>
+            <param name="spriteBatch"></param>
+        </member>
+        <member name="M:KinectExplorer.KinectGame.DrawCamera(Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Draws the Camera with the given Spritebatch to the given Rectangle of the screen.
+            </summary>
+            <param name="spriteBatch"></param>
+            <param name="rect"></param>
+        </member>
+        <member name="P:KinectExplorer.KinectGame.Resolution">
+            <summary>
+            Gets the resolution of the running game
+            </summary>
+        </member>
+        <member name="P:KinectExplorer.KinectGame.SkeletonA">
+            <summary>
+            Gets the first Skeleton found by the Kinect
+            </summary>
+        </member>
+        <member name="P:KinectExplorer.KinectGame.SkeletonB">
+            <summary>
+            Gets the second Skeleton found by the Kinect
+            </summary>
+        </member>
+        <member name="P:KinectExplorer.KinectGame.GraphicsDevice">
+            <summary>
+            Get the GraphicsDevice for this game
+            </summary>
+        </member>
+        <member name="P:KinectExplorer.KinectGame.Window">
+            <summary>
+            The GameWindow, as would be found in a Game class
+            </summary>
+        </member>
+        <member name="P:KinectExplorer.KinectGame.Finished">
+            <summary>
+            Returns true if the Exit() method has been called
+            to indicate that this game should exit.
+            </summary>
+        </member>
+        <member name="T:KinectExplorer.GameParameters">
+            <summary>
+            An wrapper object for the data a KinectGame needs to run.
+            This class will be passed to a KinectGame by the KinectGameHost and read
+            - there is no reason to interact with it.
+            </summary>
+        </member>
+        <member name="T:KinectExplorer.TextUtils">
+            <summary>
+            A class for helping with text formatting
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.TextUtils.CutTextToWidth(Microsoft.Xna.Framework.Graphics.SpriteFont,System.String,System.Int32)">
+            <summary>
+            Returns a String cut off to a given max width using the given font
+            </summary>
+            <param name="font">The font to use when measuring</param>
+            <param name="text">The text to cut</param>
+            <param name="maxWidth">The max width for the text</param>
+            <returns>The cutoff string</returns>
+        </member>
+        <member name="T:KinectExplorer.ShapesManager">
+            <summary>
+            A convenience class for creating shape Textures
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.ShapesManager.Image2Texture(System.Drawing.Image,Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Converts the given System.Drawing.Image into a Texture2D.
+            </summary>
+            <param name="image">The image to be converted</param>
+            <param name="graphicsDevice">The GraphicsDevice with which the image will be displayed</param>
+            <param name="texture">A texture to reuse - can be null</param>
+            <returns>A Texture2D of the image</returns>
+        </member>
+        <member name="M:KinectExplorer.ShapesManager.CreateEllipseTexture(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.Int32,System.Int32,Microsoft.Xna.Framework.Color,System.Boolean)">
+            <summary>
+            Creates an ellipse (oval) shape texture of the given with and height
+            </summary>
+            <param name="graphicsDevice">The GraphicsDevice to use when creating the Texture2D</param>
+            <param name="width">The width of the ellipse</param>
+            <param name="height">The height of the ellipse</param>
+            <param name="color">The color of the ellipse</param>
+            <param name="fill">Whether or not to fill in the ellipse</param>
+            <returns>The created Texture2D</returns>
+        </member>
+        <member name="T:KinectExplorer.Size">
+            <summary>
+            Represents a integer size
+            </summary>
+        </member>
+        <member name="M:KinectExplorer.Size.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a Size with the given width and height
+            </summary>
+            <param name="width">The width</param>
+            <param name="height">The height</param>
+        </member>
+        <member name="P:KinectExplorer.Size.Width">
+            <summary>
+            The width
+            </summary>
+        </member>
+        <member name="P:KinectExplorer.Size.Height">
+            <summary>
+            The height
+            </summary>
+        </member>
+    </members>
+</doc>
